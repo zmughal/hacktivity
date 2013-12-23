@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://zmughal.github.io/hacktivity/atom.xml" rel="self"/>
+  <link href="http://zmughal.github.io/hacktivity/"/>
+  <updated>2013-12-23T13:07:16-06:00</updated>
+  <id>http://zmughal.github.io/hacktivity/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
