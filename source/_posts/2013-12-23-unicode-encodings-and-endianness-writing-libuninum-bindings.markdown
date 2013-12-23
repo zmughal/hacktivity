@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Unicode endcodings and endianness — writing libuninum bindings"
+title: "Unicode encodings and endianness — writing libuninum bindings"
 date: 2013-12-23 13:32:33 -0600
 comments: true
 categories:
@@ -21,7 +21,7 @@ generates the actual API calls to glue the Perl interpreter with the native
 code.
 
 I actually wanted to start learning XS a few months back. In the past,
-I would put together rudiementary bindings using [SWIG](http://www.swig.org/),
+I would put together rudimentary bindings using [SWIG](http://www.swig.org/),
 but the results weren't very pleasant to use. It ends up creating bindings that
 look very much like calling C code and dealing with pointers and context
 directly. That pretty much defeats the purpose of creating a binding! So now that
@@ -45,7 +45,7 @@ Before I actually hack on the bindings, I need to think about how I'm going to
 distribute this code. Most people's systems aren't going to have access to the libuninum
 source code to build these bindings, so I'll need to somehow get the source
 code and build it on those systems. That's where [Alien::Base](https://metacpan.org/release/Alien-Base)
-comes in. It's a neat module that will download a tarball, extract it, buiild
+comes in. It's a neat module that will download a tarball, extract it, build
 it, and place the dynamic library and headers in a place that can be accessed
 by other modules. I made a subclass of Alien::Base called
 [Alien::Uninum](https://github.com/zmughal/p5-Alien-Uninum) that will do just
@@ -91,7 +91,7 @@ on my system, not 4 (32-bits).
 {% include_code 2013-12-23/libuninum-2.7/unicode.h range:1-5 %}
 
 That means that as the library iterates over each character, it is actually
-looking at two chracters instead of one and of course, none of the comparisons
+looking at two characters instead of one and of course, none of the comparisons
 were working. What it actually needed to use was a `uint32_t` from `stdint.h`.
 However, even though this typedef is in the C99 standard, there are some portability
 issues with using it. Instead, I used the integer type that Perl detected to be
