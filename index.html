@@ -363,7 +363,19 @@ realise what was happening. In libuninum&rsquo;s <code>unicode.h</code>, the <co
 defined as an <code>unsigned long</code>, however <code>sizeof(unsigned long)</code> is 8 (64-bits)
 on my system, not 4 (32-bits).</p>
 
-<p>File /home/zaki/sw_projects/hacktivity/hacktivity/source/downloads/code/end:5 could not be found</p>
+<figure class='code'><figcaption><span> (libuninum-2,7_unicode_snip.h)</span> <a href='/hacktivity/downloads/code/2013-12-23/libuninum-2,7_unicode_snip.h'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">UTF32</span><span class="p">;</span>    <span class="cm">/* at least 32 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">UTF16</span><span class="p">;</span>    <span class="cm">/* at least 16 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">UCS2</span><span class="p">;</span> <span class="cm">/* at least 16 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>  <span class="n">UTF8</span><span class="p">;</span> <span class="cm">/* 8 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>  <span class="n">Boolean</span><span class="p">;</span> <span class="cm">/* 0 or 1 */</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>That means that as the library iterates over each character, it is actually
 looking at two characters instead of one and of course, none of the comparisons
@@ -373,7 +385,21 @@ issues with using it. Instead, I used the integer type that Perl detected to be
 32-bits wide and patched the code when I built it using Alien::Uninum
 (<a href="https://github.com/zmughal/p5-Alien-Uninum/blob/6d28c2fab8e22d1164309de23a92a724982fb1d6/inc/Alien/Uninum/ModuleBuild.pm#L75">code</a>). Now the file looked like this:</p>
 
-<p>File /home/zaki/sw_projects/hacktivity/hacktivity/source/downloads/code/end:6 could not be found</p>
+<figure class='code'><figcaption><span> (libuninum-2,7_unicode-patched_snip.h)</span> <a href='/hacktivity/downloads/code/2013-12-23/libuninum-2,7_unicode-patched_snip.h'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/* PATCH: use Perl&#39;s U32 for portability */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span>   <span class="n">UTF32</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">UTF16</span><span class="p">;</span>    <span class="cm">/* at least 16 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">UCS2</span><span class="p">;</span> <span class="cm">/* at least 16 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>  <span class="n">UTF8</span><span class="p">;</span> <span class="cm">/* 8 bits */</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>  <span class="n">Boolean</span><span class="p">;</span> <span class="cm">/* 0 or 1 */</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Yay! Now the XS code was working on the test data. All I had to do now was get
 my string to libuninum and pass the result back. I tried that and libuninum was giving me errors again.
