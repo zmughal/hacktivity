@@ -23,23 +23,23 @@ code.
 I actually wanted to start learning XS a few months back. In the past,
 I would put together rudimentary bindings using [SWIG](http://www.swig.org/),
 but the results weren't very pleasant to use. It ends up creating bindings that
-look very much like calling C code and dealing with pointers and context
+look very much like calling C code and force you to deal with pointers and context
 directly. That pretty much defeats the purpose of creating a binding! So now that
 I have a bit more [tuits](http://en.wiktionary.org/wiki/round_tuit), I started looking
 around for documentation on using XS. Coincidentally, I found a
 [project](https://github.com/Perl-XS/notes) that gathered many of the same
 notes I was using. Seems that I timed my learning process just
 [right](http://www.nntp.perl.org/group/perl.xs/2013/12/msg2749.html) and I've
-been learning even more about Perl internals from the newly relaunched `#xs`
+been learning a great deal about Perl internals from the newly relaunched `#xs`
 channel on [irc.perl.org](http://www.irc.perl.org/).
 
-As I usually do when I'm learning something new, I jump right into doing
-something with what I'm learning as I'm picking things up. So I chose to work
-on something that was both simple, but non-trivial. Years ago, I came across a
-project called [libuninum](http://billposer.org/Software/libuninum.html) that
-converts different number system strings into integers. Once you have these
-integers, you can use in operations for arithmetic and sorting. Pretty useful
-if you have to deal with data in different languages.
+As I usually do when I'm learning something new, I jump right into making
+something as I'm picking things up. I chose to work on something that was both
+simple, but non-trivial. Years ago on Freshmeat, I came across a project called
+[libuninum](http://billposer.org/Software/libuninum.html) that converts
+different number system strings into integers. Once you have these integers,
+you can use them in operations for arithmetic and sorting. Pretty useful if you
+have to deal with data in different languages.
 
 Before I actually hack on the bindings, I need to think about how I'm going to
 distribute this code. Most people's systems aren't going to have access to the libuninum
@@ -49,11 +49,11 @@ comes in. It's a neat module that will download a tarball, extract it, build
 it, and place the dynamic library and headers in a place that can be accessed
 by other modules. I made a subclass of Alien::Base called
 [Alien::Uninum](https://github.com/zmughal/p5-Alien-Uninum) that will do just
-that. I even got a small [patch](https://github.com/jberger/Alien-Base/pull/31) in to
-Alien::Base out of that. All I needed now to start hacking on the XS code is a
+that for libuninum. I even got a small [patch](https://github.com/jberger/Alien-Base/pull/31) in to
+Alien::Base to fix some issues I had. All I needed now to start hacking on the XS code is a
 way to tell the compiler where all the libuninum files are. With Alien::Base,
-all I have to do is send those to the package build process using the `cflags`
-and `libs` methods
+I just send those to the package build process using the `cflags`
+and `libs` methods which is pretty much like using `pkg-config`
 ([code](https://github.com/zmughal/p5-Unicode-Number/blob/dfe5abea501a830e159f8271be188cfc129baa0e/inc/UninumMakeMaker.pm)).
 
 I got to hacking and started on the simplest task: getting the list of all the
@@ -85,10 +85,10 @@ It still wasn't working. So, as you can see above, I grabbed a function from
 `uninum.c` and renamed it to `MyLaoToInt` and called it directly. Still wasn't
 working. Only when I started to print out the contents of each character did I
 realise what was happening. In libuninum's `unicode.h`, the `UTF32` typedef is
-defined as a an `unsigned long`, however `sizeof(unsigned long)` is 8 (64-bits)
+defined as an `unsigned long`, however `sizeof(unsigned long)` is 8 (64-bits)
 on my system, not 4 (32-bits).
 
-{% include_code 2013-12-23/libuninum-2.7/unicode.h range:1-5 %}
+{% include_code 2013-12-23/libuninum-2,7_unicode.h range:1-5 %}
 
 That means that as the library iterates over each character, it is actually
 looking at two characters instead of one and of course, none of the comparisons
@@ -98,7 +98,7 @@ issues with using it. Instead, I used the integer type that Perl detected to be
 32-bits wide and patched the code when I built it using Alien::Uninum
 ([code](https://github.com/zmughal/p5-Alien-Uninum/blob/6d28c2fab8e22d1164309de23a92a724982fb1d6/inc/Alien/Uninum/ModuleBuild.pm#L75)). Now the file looked like this:
 
-{% include_code 2013-12-23/libuninum-2.7/unicode-patched.h range:1-6 %}
+{% include_code 2013-12-23/libuninum-2,7_unicode-patched.h range:1-6 %}
 
 Yay! Now the XS code was working on the test data. All I had to do now was get
 my string to libuninum and pass the result back. I tried that and libuninum was giving me errors again.
@@ -111,16 +111,13 @@ hex dump routine from
 ```
 
 As soon as I saw the first character, I knew what was going on. What I was
-looking at was the [byte-order
-mark](http://en.wikipedia.org/wiki/Byte_order_mark) or BOM.  Remember, I had
+looking at was the [byte-order mark](http://en.wikipedia.org/wiki/Byte_order_mark) or BOM.  Remember, I had
 converted the UTF-8 string to UTF-32 in Perl before sending it to C, but I
-never specified the endianness, so Perl used big-endian as the [default
-endianness](http://perldoc.perl.org/Encode/Unicode.html#by-endianness). Well,
-since the C code was using the native endianness of the machine, I needed to
+never specified the endianness, so Perl used big-endian as the [default endianness](http://perldoc.perl.org/Encode/Unicode.html#by-endianness).
+Well, since the C code was using the native endianness of the machine, I needed to
 find the machine's endianness and encode either a little-endian or
 big-endian version of UTF-32. Well, all I had to was ask Perl the byte order it
-detected at compile time and use that
-([code](https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122)).
+detected at compile time and use that ([code](https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122)).
 
 Once I did that, my code was working and all my tests passed! There are still a
 couple of things I need to do in my code to clean it up, but the code is mostly
