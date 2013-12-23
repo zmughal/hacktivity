@@ -1,102 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Zaki's Hacktivity</title>
-  <meta name="author" content="Zaki Mughal">
-
-  
-  <meta name="description" content="The past few days I&rsquo;ve been learning how to write bindings for Perl using
-XS so that I can use the many great
-libraries out there that I &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://zmughal.github.io/hacktivity">
-  <link href="/hacktivity/favicon.png" rel="icon">
-  <link href="/hacktivity/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/hacktivity/atom.xml" rel="alternate" title="Zaki's Hacktivity" type="application/atom+xml">
-  <script src="/hacktivity/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/hacktivity/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/hacktivity/">Zaki's Hacktivity</a></h1>
-  
-    <h2>I'll think of a subtitle later...</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/hacktivity/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:zmughal.github.io/hacktivity" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/hacktivity/">Blog</a></li>
-  <li><a href="/hacktivity/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
+  <title><![CDATA[Category: Perl | Zaki's Hacktivity]]></title>
+  <link href="http://zmughal.github.io/hacktivity/blog/categories/perl/atom.xml" rel="self"/>
+  <link href="http://zmughal.github.io/hacktivity/"/>
+  <updated>2013-12-23T15:27:25-06:00</updated>
+  <id>http://zmughal.github.io/hacktivity/</id>
+  <author>
+    <name><![CDATA[Zaki Mughal]]></name>
     
-      <h1 class="entry-title"><a href="/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings/">Unicode Endcodings and Endianness — Writing Libuninum Bindings</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2013-12-23T13:32:33-06:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The past few days I&rsquo;ve been learning how to write bindings for Perl using
+  <entry>
+    <title type="html"><![CDATA[Unicode Endcodings and Endianness — Writing Libuninum Bindings]]></title>
+    <link href="http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings/"/>
+    <updated>2013-12-23T13:32:33-06:00</updated>
+    <id>http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings</id>
+    <content type="html"><![CDATA[<p>The past few days I&rsquo;ve been learning how to write bindings for Perl using
 <a href="http://perldoc.perl.org/perlxs.html">XS</a> so that I can use the many great
 libraries out there that I normally use in C or C++. Native bindings are very
 magical things because they glue together different languages that often don&rsquo;t
@@ -166,7 +88,7 @@ because I could get it working in plain C, but not in the XS. So I put together
 a small script using <a href="https://metacpan.org/pod/Inline::C">Inline::C</a> that let
 me call the libuninum function directly.</p>
 
-<figure class='code'><figcaption><span> (inline-test.pl)</span> <a href='/hacktivity/downloads/code/2013-12-23/inline-test.pl'>download</a></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (inline-test.pl)</span> <a href='/downloads/code/2013-12-23/inline-test.pl'>download</a></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -264,9 +186,9 @@ me call the libuninum function directly.</p>
 </span><span class='line'>
 </span><span class='line'><span class="k">use</span> <span class="n">Inline</span> <span class="n">C</span><span class="p">;</span>
 </span><span class='line'><span class="k">use</span> <span class="n">Inline</span> <span class="n">C</span> <span class="o">=&gt;</span> <span class="n">Config</span> <span class="o">=&gt;</span>
-</span><span class='line'>  <span class="c1">#CCFLAGS =&gt; &quot;&quot;,</span>
-</span><span class='line'>  <span class="n">INC</span> <span class="o">=&gt;</span> <span class="s">&quot;-I/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/include/uninum&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">LIBS</span> <span class="o">=&gt;</span> <span class="s">&quot;-L/usr/local/lib -fstack-protector -L/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/lib -luninum&quot;</span><span class="p">;</span>
+</span><span class='line'>	<span class="c1">#CCFLAGS =&gt; &quot;&quot;,</span>
+</span><span class='line'>	<span class="n">INC</span> <span class="o">=&gt;</span> <span class="s">&quot;-I/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/include/uninum&quot;</span><span class="p">,</span>
+</span><span class='line'>	<span class="n">LIBS</span> <span class="o">=&gt;</span> <span class="s">&quot;-L/usr/local/lib -fstack-protector -L/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/lib -luninum&quot;</span><span class="p">;</span>
 </span><span class='line'><span class="c1"># CFLAGS = -I/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/include/uninum -O2</span>
 </span><span class='line'><span class="c1"># LDFLAGS = -O2 -L/usr/local/lib -fstack-protector -L/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/lib -luninum</span>
 </span><span class='line'><span class="k">use</span> <span class="n">v5</span><span class="mf">.14</span><span class="p">;</span>
@@ -325,7 +247,7 @@ me call the libuninum function directly.</p>
 </span><span class='line'><span class="cp">    case 0x0ED9:</span>
 </span><span class='line'><span class="cp">      CurrentValue = 9;</span>
 </span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    default:         /* Error */</span>
+</span><span class='line'><span class="cp">    default:			/* Error */</span>
 </span><span class='line'><span class="cp">      uninum_err = NS_ERROR_BADCHARACTER;</span>
 </span><span class='line'><span class="cp">      uninum_badchar = c;</span>
 </span><span class='line'><span class="cp">      mpz_clear(Result);</span>
@@ -341,20 +263,19 @@ me call the libuninum function directly.</p>
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'><span class="cp">unsigned long gg() {</span>
-</span><span class='line'><span class="cp"> uninum_err = 20;</span>
-</span><span class='line'><span class="cp"> wchar_t str[] =L&quot;\x0ED5\x0ED7\x0ED6&quot;; /* Lao digits 5 7 6 */</span>
+</span><span class='line'><span class="cp">	uninum_err = 20;</span>
+</span><span class='line'><span class="cp">	wchar_t str[] =L&quot;\x0ED5\x0ED7\x0ED6&quot;; /* Lao digits 5 7 6 */</span>
 </span><span class='line'><span class="cp">        /*wchar_t str[] =L&quot;\x0000\x0ED5\x0ED7\x0000\x0ED6&quot;; /* Lao digits 5 7 6 */</span>
-</span><span class='line'><span class="cp"> /*fprintf(stderr, &quot;%lx - %d with size %d %d\n&quot;,  ( (UTF32*)str )[0] ,  ( (UTF32*)str )[0] == 0x0ED5, sizeof(str[0]), sizeof(0x0ED5));*/</span>
-</span><span class='line'><span class="cp"> int ns = GuessNumberSystem(str);</span>
-</span><span class='line'><span class="cp"> mpz_t Result;</span>
-</span><span class='line'><span class="cp"> union ns_rval val;</span>
-</span><span class='line'><span class="cp"> StringToInt(&amp;val, (UTF32*)str, NS_TYPE_ULONG, ns);</span>
-</span><span class='line'><span class="cp"> /*MyLaoToInt(Result, (UTF32*)str);*/</span>
-</span><span class='line'><span class="cp"> fprintf(stderr, &quot;error: %d\n&quot;, uninum_err);</span>
-</span><span class='line'><span class="cp"> return val.u;</span>
+</span><span class='line'><span class="cp">	/*fprintf(stderr, &quot;%lx - %d with size %d %d\n&quot;,  ( (UTF32*)str )[0] ,  ( (UTF32*)str )[0] == 0x0ED5, sizeof(str[0]), sizeof(0x0ED5));*/</span>
+</span><span class='line'><span class="cp">	int ns = GuessNumberSystem(str);</span>
+</span><span class='line'><span class="cp">	mpz_t Result;</span>
+</span><span class='line'><span class="cp">	union ns_rval val;</span>
+</span><span class='line'><span class="cp">	StringToInt(&amp;val, (UTF32*)str, NS_TYPE_ULONG, ns);</span>
+</span><span class='line'><span class="cp">	/*MyLaoToInt(Result, (UTF32*)str);*/</span>
+</span><span class='line'><span class="cp">	fprintf(stderr, &quot;error: %d\n&quot;, uninum_err);</span>
+</span><span class='line'><span class="cp">	return val.u;</span>
 </span><span class='line'><span class="cp">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>It still wasn&rsquo;t working. So, as you can see above, I grabbed a function from
 <code>uninum.c</code> and renamed it to <code>MyLaoToInt</code> and called it directly. Still wasn&rsquo;t
@@ -381,9 +302,9 @@ Now what?! I decided I need to look at what the C was accessing, so I grabbed a
 hex dump routine from
 <a href="http://c2.com/cgi/wiki?HexDumpInManyProgrammingLanguages">here</a> and looked at it:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>00 00 fe ff ...</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+00 00 fe ff ...
+</code></p>
 
 <p>As soon as I saw the first character, I knew what was going on. What I was
 looking at was the <a href="http://en.wikipedia.org/wiki/Byte_order_mark">byte-order
@@ -400,97 +321,7 @@ detected at compile time and use that
 <p>Once I did that, my code was working and all my tests passed! There are still a
 couple of things I need to do in my code to clean it up, but the code is mostly
 done for now.</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/hacktivity/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings/">Unicode Endcodings and Endianness — Writing Libuninum Bindings</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  
-  <a href="https://github.com/zmughal">@zmughal</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'zmughal',
-            count: 10,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/hacktivity/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Zaki Mughal -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
-</html>
+</feed>
