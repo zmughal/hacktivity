@@ -4,7 +4,7 @@
   <title><![CDATA[Zaki's Hacktivity]]></title>
   <link href="http://zmughal.github.io/hacktivity/atom.xml" rel="self"/>
   <link href="http://zmughal.github.io/hacktivity/"/>
-  <updated>2013-12-23T15:31:45-06:00</updated>
+  <updated>2013-12-23T15:49:45-06:00</updated>
   <id>http://zmughal.github.io/hacktivity/</id>
   <author>
     <name><![CDATA[Zaki Mughal]]></name>
@@ -32,23 +32,23 @@ code.</p>
 <p>I actually wanted to start learning XS a few months back. In the past,
 I would put together rudimentary bindings using <a href="http://www.swig.org/">SWIG</a>,
 but the results weren&rsquo;t very pleasant to use. It ends up creating bindings that
-look very much like calling C code and dealing with pointers and context
+look very much like calling C code and force you to deal with pointers and context
 directly. That pretty much defeats the purpose of creating a binding! So now that
 I have a bit more <a href="http://en.wiktionary.org/wiki/round_tuit">tuits</a>, I started looking
 around for documentation on using XS. Coincidentally, I found a
 <a href="https://github.com/Perl-XS/notes">project</a> that gathered many of the same
 notes I was using. Seems that I timed my learning process just
 <a href="http://www.nntp.perl.org/group/perl.xs/2013/12/msg2749.html">right</a> and I&rsquo;ve
-been learning even more about Perl internals from the newly relaunched <code>#xs</code>
+been learning a great deal about Perl internals from the newly relaunched <code>#xs</code>
 channel on <a href="http://www.irc.perl.org/">irc.perl.org</a>.</p>
 
-<p>As I usually do when I&rsquo;m learning something new, I jump right into doing
-something with what I&rsquo;m learning as I&rsquo;m picking things up. So I chose to work
-on something that was both simple, but non-trivial. Years ago, I came across a
-project called <a href="http://billposer.org/Software/libuninum.html">libuninum</a> that
-converts different number system strings into integers. Once you have these
-integers, you can use in operations for arithmetic and sorting. Pretty useful
-if you have to deal with data in different languages.</p>
+<p>As I usually do when I&rsquo;m learning something new, I jump right into making
+something as I&rsquo;m picking things up. I chose to work on something that was both
+simple, but non-trivial. Years ago on Freshmeat, I came across a project called
+<a href="http://billposer.org/Software/libuninum.html">libuninum</a> that converts
+different number system strings into integers. Once you have these integers,
+you can use them in operations for arithmetic and sorting. Pretty useful if you
+have to deal with data in different languages.</p>
 
 <p>Before I actually hack on the bindings, I need to think about how I&rsquo;m going to
 distribute this code. Most people&rsquo;s systems aren&rsquo;t going to have access to the libuninum
@@ -58,11 +58,11 @@ comes in. It&rsquo;s a neat module that will download a tarball, extract it, bui
 it, and place the dynamic library and headers in a place that can be accessed
 by other modules. I made a subclass of Alien::Base called
 <a href="https://github.com/zmughal/p5-Alien-Uninum">Alien::Uninum</a> that will do just
-that. I even got a small <a href="https://github.com/jberger/Alien-Base/pull/31">patch</a> in to
-Alien::Base out of that. All I needed now to start hacking on the XS code is a
+that for libuninum. I even got a small <a href="https://github.com/jberger/Alien-Base/pull/31">patch</a> in to
+Alien::Base to fix some issues I had. All I needed now to start hacking on the XS code is a
 way to tell the compiler where all the libuninum files are. With Alien::Base,
-all I have to do is send those to the package build process using the <code>cflags</code>
-and <code>libs</code> methods
+I just send those to the package build process using the <code>cflags</code>
+and <code>libs</code> methods which is pretty much like using <code>pkg-config</code>
 (<a href="https://github.com/zmughal/p5-Unicode-Number/blob/dfe5abea501a830e159f8271be188cfc129baa0e/inc/UninumMakeMaker.pm">code</a>).</p>
 
 <p>I got to hacking and started on the simplest task: getting the list of all the
@@ -282,7 +282,7 @@ me call the libuninum function directly.</p>
 <code>uninum.c</code> and renamed it to <code>MyLaoToInt</code> and called it directly. Still wasn&rsquo;t
 working. Only when I started to print out the contents of each character did I
 realise what was happening. In libuninum&rsquo;s <code>unicode.h</code>, the <code>UTF32</code> typedef is
-defined as a an <code>unsigned long</code>, however <code>sizeof(unsigned long)</code> is 8 (64-bits)
+defined as an <code>unsigned long</code>, however <code>sizeof(unsigned long)</code> is 8 (64-bits)
 on my system, not 4 (32-bits).</p>
 
 <p>File /home/zaki/sw_projects/hacktivity/hacktivity/source/downloads/code/range:1-5 could not be found</p>
@@ -308,16 +308,13 @@ hex dump routine from
 
 
 <p>As soon as I saw the first character, I knew what was going on. What I was
-looking at was the <a href="http://en.wikipedia.org/wiki/Byte_order_mark">byte-order
-mark</a> or BOM.  Remember, I had
+looking at was the <a href="http://en.wikipedia.org/wiki/Byte_order_mark">byte-order mark</a> or BOM.  Remember, I had
 converted the UTF-8 string to UTF-32 in Perl before sending it to C, but I
-never specified the endianness, so Perl used big-endian as the <a href="http://perldoc.perl.org/Encode/Unicode.html#by-endianness">default
-endianness</a>. Well,
-since the C code was using the native endianness of the machine, I needed to
+never specified the endianness, so Perl used big-endian as the <a href="http://perldoc.perl.org/Encode/Unicode.html#by-endianness">default endianness</a>.
+Well, since the C code was using the native endianness of the machine, I needed to
 find the machine&rsquo;s endianness and encode either a little-endian or
-big-endian version of UTF-32. Well, all I had to was ask Perl the byte order it
-detected at compile time and use that
-(<a href="https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122">code</a>).</p>
+big-endian version of UTF-32. All I had to was ask Perl the byte order it
+detected at compile time and use that (<a href="https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122">code</a>).</p>
 
 <p>Once I did that, my code was working and all my tests passed! There are still a
 couple of things I need to do in my code to clean it up, but the code is mostly
