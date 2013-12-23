@@ -88,7 +88,7 @@ realise what was happening. In libuninum's `unicode.h`, the `UTF32` typedef is
 defined as an `unsigned long`, however `sizeof(unsigned long)` is 8 (64-bits)
 on my system, not 4 (32-bits).
 
-{% include_code 2013-12-23/libuninum-2,7_unicode.h end:5 %}
+{% include_code 2013-12-23/libuninum-2,7_unicode_snip.h %}
 
 That means that as the library iterates over each character, it is actually
 looking at two characters instead of one and of course, none of the comparisons
@@ -98,7 +98,7 @@ issues with using it. Instead, I used the integer type that Perl detected to be
 32-bits wide and patched the code when I built it using Alien::Uninum
 ([code](https://github.com/zmughal/p5-Alien-Uninum/blob/6d28c2fab8e22d1164309de23a92a724982fb1d6/inc/Alien/Uninum/ModuleBuild.pm#L75)). Now the file looked like this:
 
-{% include_code 2013-12-23/libuninum-2,7_unicode-patched.h end:6 %}
+{% include_code 2013-12-23/libuninum-2,7_unicode-patched_snip.h %}
 
 Yay! Now the XS code was working on the test data. All I had to do now was get
 my string to libuninum and pass the result back. I tried that and libuninum was giving me errors again.
