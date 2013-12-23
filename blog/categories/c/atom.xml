@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C | Zaki's Hacktivity]]></title>
   <link href="http://zmughal.github.io/hacktivity/blog/categories/c/atom.xml" rel="self"/>
   <link href="http://zmughal.github.io/hacktivity/"/>
-  <updated>2013-12-23T15:28:59-06:00</updated>
+  <updated>2013-12-23T15:31:45-06:00</updated>
   <id>http://zmughal.github.io/hacktivity/</id>
   <author>
     <name><![CDATA[Zaki Mughal]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Unicode Endcodings and Endianness — Writing Libuninum Bindings]]></title>
-    <link href="http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings/"/>
+    <title type="html"><![CDATA[Unicode Encodings and Endianness — Writing Libuninum Bindings]]></title>
+    <link href="http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-encodings-and-endianness-writing-libuninum-bindings/"/>
     <updated>2013-12-23T13:32:33-06:00</updated>
-    <id>http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-endcodings-and-endianness-writing-libuninum-bindings</id>
+    <id>http://zmughal.github.io/hacktivity/blog/2013/12/23/unicode-encodings-and-endianness-writing-libuninum-bindings</id>
     <content type="html"><![CDATA[<p>The past few days I&rsquo;ve been learning how to write bindings for Perl using
 <a href="http://perldoc.perl.org/perlxs.html">XS</a> so that I can use the many great
 libraries out there that I normally use in C or C++. Native bindings are very
@@ -30,7 +30,7 @@ generates the actual API calls to glue the Perl interpreter with the native
 code.</p>
 
 <p>I actually wanted to start learning XS a few months back. In the past,
-I would put together rudiementary bindings using <a href="http://www.swig.org/">SWIG</a>,
+I would put together rudimentary bindings using <a href="http://www.swig.org/">SWIG</a>,
 but the results weren&rsquo;t very pleasant to use. It ends up creating bindings that
 look very much like calling C code and dealing with pointers and context
 directly. That pretty much defeats the purpose of creating a binding! So now that
@@ -54,7 +54,7 @@ if you have to deal with data in different languages.</p>
 distribute this code. Most people&rsquo;s systems aren&rsquo;t going to have access to the libuninum
 source code to build these bindings, so I&rsquo;ll need to somehow get the source
 code and build it on those systems. That&rsquo;s where <a href="https://metacpan.org/release/Alien-Base">Alien::Base</a>
-comes in. It&rsquo;s a neat module that will download a tarball, extract it, buiild
+comes in. It&rsquo;s a neat module that will download a tarball, extract it, build
 it, and place the dynamic library and headers in a place that can be accessed
 by other modules. I made a subclass of Alien::Base called
 <a href="https://github.com/zmughal/p5-Alien-Uninum">Alien::Uninum</a> that will do just
@@ -287,7 +287,7 @@ on my system, not 4 (32-bits).</p>
 <p>File /home/zaki/sw_projects/hacktivity/hacktivity/source/downloads/code/range:1-5 could not be found</p>
 
 <p>That means that as the library iterates over each character, it is actually
-looking at two chracters instead of one and of course, none of the comparisons
+looking at two characters instead of one and of course, none of the comparisons
 were working. What it actually needed to use was a <code>uint32_t</code> from <code>stdint.h</code>.
 However, even though this typedef is in the C99 standard, there are some portability
 issues with using it. Instead, I used the integer type that Perl detected to be
