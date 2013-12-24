@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Unicode | Zaki's Hacktivity]]></title>
   <link href="http://zmughal.github.io/hacktivity/blog/categories/unicode/atom.xml" rel="self"/>
   <link href="http://zmughal.github.io/hacktivity/"/>
-  <updated>2013-12-23T15:55:29-06:00</updated>
+  <updated>2013-12-24T15:52:29-06:00</updated>
   <id>http://zmughal.github.io/hacktivity/</id>
   <author>
     <name><![CDATA[Zaki Mughal]]></name>
@@ -88,194 +88,7 @@ because I could get it working in plain C, but not in the XS. So I put together
 a small script using <a href="https://metacpan.org/pod/Inline::C">Inline::C</a> that let
 me call the libuninum function directly.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (inline-test.pl)</span> <a href='/downloads/code/2013-12-23/inline-test.pl'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="c1">#!/usr/bin/env perl</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">use</span> <span class="n">Inline</span> <span class="n">C</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="n">Inline</span> <span class="n">C</span> <span class="o">=&gt;</span> <span class="n">Config</span> <span class="o">=&gt;</span>
-</span><span class='line'>	<span class="c1">#CCFLAGS =&gt; &quot;&quot;,</span>
-</span><span class='line'>	<span class="n">INC</span> <span class="o">=&gt;</span> <span class="s">&quot;-I/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/include/uninum&quot;</span><span class="p">,</span>
-</span><span class='line'>	<span class="n">LIBS</span> <span class="o">=&gt;</span> <span class="s">&quot;-L/usr/local/lib -fstack-protector -L/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/lib -luninum&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="c1"># CFLAGS = -I/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/include/uninum -O2</span>
-</span><span class='line'><span class="c1"># LDFLAGS = -O2 -L/usr/local/lib -fstack-protector -L/home/zaki/perl5/perlbrew/perls/perl-5.18.1/lib/site_perl/5.18.1/auto/share/dist/Alien-Uninum/lib -luninum</span>
-</span><span class='line'><span class="k">use</span> <span class="n">v5</span><span class="mf">.14</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="n">strict</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="n">warnings</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">say</span> <span class="n">gg</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">__END__</span>
-</span><span class='line'><span class="cp">__C__</span>
-</span><span class='line'><span class="cp">#include &lt;gmp.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unicode.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;nsdefs.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;uninum.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="cp">static void MyLaoToInt(mpz_t mpzResult, UTF32 *s) {</span>
-</span><span class='line'><span class="cp">  unsigned long CurrentValue; </span>
-</span><span class='line'><span class="cp">  UTF32 c;</span>
-</span><span class='line'><span class="cp">  mpz_t Result;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">  uninum_err = NS_ERROR_OKAY;</span>
-</span><span class='line'><span class="cp">  mpz_init(Result);</span>
-</span><span class='line'><span class="cp">  CurrentValue = 0;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">  while ( (c = *s++) != 0x0000) {</span>
-</span><span class='line'><span class="cp">    fprintf(stderr, &quot;%lx - %d ===== %d \n&quot;, c, CurrentValue, c == (unsigned long)0x0ED5UL);</span>
-</span><span class='line'><span class="cp">    switch (c) {</span>
-</span><span class='line'><span class="cp">    case 0x0ED0:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 0;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED1:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 1;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">     case 0x0ED2:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 2;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED3:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 3;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED4:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 4;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED5:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 5;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED6:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 6;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED7:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 7;</span>
-</span><span class='line'><span class="cp">         break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED8:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 8;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    case 0x0ED9:</span>
-</span><span class='line'><span class="cp">      CurrentValue = 9;</span>
-</span><span class='line'><span class="cp">      break;</span>
-</span><span class='line'><span class="cp">    default:			/* Error */</span>
-</span><span class='line'><span class="cp">      uninum_err = NS_ERROR_BADCHARACTER;</span>
-</span><span class='line'><span class="cp">      uninum_badchar = c;</span>
-</span><span class='line'><span class="cp">      mpz_clear(Result);</span>
-</span><span class='line'><span class="cp">      return;</span>
-</span><span class='line'><span class="cp">    }</span>
-</span><span class='line'><span class="cp">    mpz_mul_ui(Result, Result, 10L);</span>
-</span><span class='line'><span class="cp">    fprintf(stderr,&quot;%d&quot;, CurrentValue);</span>
-</span><span class='line'><span class="cp">    mpz_add_ui(Result, Result, CurrentValue);</span>
-</span><span class='line'><span class="cp">  }</span>
-</span><span class='line'><span class="cp">  mpz_init_set(mpzResult, Result);</span>
-</span><span class='line'><span class="cp">  mpz_clear(Result);</span>
-</span><span class='line'><span class="cp">}</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="cp">unsigned long gg() {</span>
-</span><span class='line'><span class="cp">	uninum_err = 20;</span>
-</span><span class='line'><span class="cp">	wchar_t str[] =L&quot;\x0ED5\x0ED7\x0ED6&quot;; /* Lao digits 5 7 6 */</span>
-</span><span class='line'><span class="cp">        /*wchar_t str[] =L&quot;\x0000\x0ED5\x0ED7\x0000\x0ED6&quot;; /* Lao digits 5 7 6 */</span>
-</span><span class='line'><span class="cp">	/*fprintf(stderr, &quot;%lx - %d with size %d %d\n&quot;,  ( (UTF32*)str )[0] ,  ( (UTF32*)str )[0] == 0x0ED5, sizeof(str[0]), sizeof(0x0ED5));*/</span>
-</span><span class='line'><span class="cp">	int ns = GuessNumberSystem(str);</span>
-</span><span class='line'><span class="cp">	mpz_t Result;</span>
-</span><span class='line'><span class="cp">	union ns_rval val;</span>
-</span><span class='line'><span class="cp">	StringToInt(&amp;val, (UTF32*)str, NS_TYPE_ULONG, ns);</span>
-</span><span class='line'><span class="cp">	/*MyLaoToInt(Result, (UTF32*)str);*/</span>
-</span><span class='line'><span class="cp">	fprintf(stderr, &quot;error: %d\n&quot;, uninum_err);</span>
-</span><span class='line'><span class="cp">	return val.u;</span>
-</span><span class='line'><span class="cp">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% include_code 2013-12-23/inline-test.pl %}</p>
 
 <p>It still wasn&rsquo;t working. So, as you can see above, I grabbed a function from
 <code>uninum.c</code> and renamed it to <code>MyLaoToInt</code> and called it directly. Still wasn&rsquo;t
@@ -284,18 +97,7 @@ realise what was happening. In libuninum&rsquo;s <code>unicode.h</code>, the <co
 defined as an <code>unsigned long</code>, however <code>sizeof(unsigned long)</code> is 8 (64-bits)
 on my system, not 4 (32-bits).</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (libuninum-2,7_unicode_snip.h)</span> <a href='/downloads/code/2013-12-23/libuninum-2,7_unicode_snip.h'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span>	<span class="n">UTF32</span><span class="p">;</span>	<span class="cm">/* at least 32 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span>	<span class="n">UTF16</span><span class="p">;</span>	<span class="cm">/* at least 16 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span>	<span class="n">UCS2</span><span class="p">;</span>	<span class="cm">/* at least 16 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">UTF8</span><span class="p">;</span>	<span class="cm">/* 8 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">Boolean</span><span class="p">;</span> <span class="cm">/* 0 or 1 */</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% include_code lang:c 2013-12-23/libuninum-2,7_unicode_snip.h %}</p>
 
 <p>That means that as the library iterates over each character, it is actually
 looking at two characters instead of one and of course, none of the comparisons
@@ -305,20 +107,7 @@ issues with using it. Instead, I used the integer type that Perl detected to be
 32-bits wide and patched the code when I built it using Alien::Uninum
 (<a href="https://github.com/zmughal/p5-Alien-Uninum/blob/6d28c2fab8e22d1164309de23a92a724982fb1d6/inc/Alien/Uninum/ModuleBuild.pm#L75">code</a>). Now the file looked like this:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (libuninum-2,7_unicode-patched_snip.h)</span> <a href='/downloads/code/2013-12-23/libuninum-2,7_unicode-patched_snip.h'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/* PATCH: use Perl&#39;s U32 for portability */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span>	<span class="n">UTF32</span><span class="p">;</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span>	<span class="n">UTF16</span><span class="p">;</span>	<span class="cm">/* at least 16 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span>	<span class="n">UCS2</span><span class="p">;</span>	<span class="cm">/* at least 16 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">UTF8</span><span class="p">;</span>	<span class="cm">/* 8 bits */</span>
-</span><span class='line'><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">Boolean</span><span class="p">;</span> <span class="cm">/* 0 or 1 */</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% include_code lang:c 2013-12-23/libuninum-2,7_unicode-patched_snip.h %}</p>
 
 <p>Yay! Now the XS code was working on the test data. All I had to do now was get
 my string to libuninum and pass the result back. I tried that and libuninum was giving me errors again.
