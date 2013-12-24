@@ -9,9 +9,9 @@
   <meta name="author" content="Zaki Mughal">
 
   
-  <meta name="description" content="The past few days I&rsquo;ve been learning how to write bindings for Perl using
-XS so that I can use the many great
-libraries out there that I &hellip;">
+  <meta name="description" content="Since I use Dist::Zilla to help manage my
+Perl distributions, I wanted to use it with the XS package that I am working
+on. This post is just a small &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,141 @@ libraries out there that I &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/hacktivity/blog/2013/12/24/using-alien-base-dist-zilla-and-eu-mm/">Using Alien::Base, Dist::Zilla, and EU::MM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-24T15:28:11-06:00" pubdate data-updated="true">Dec 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Since I use <a href="http://p3rl.org/Dist::Zilla">Dist::Zilla</a> to help manage my
+Perl distributions, I wanted to use it with the XS package that I am working
+on. This post is just a small note how how to do that if you are using
+<a href="http://p3rl.org/Alien::Base">Alien::Base</a> to build your native library.</p>
+
+<p>Dist::Zilla usually writes it&rsquo;s own <code>Makefile.PL</code> so that
+<a href="ExtUtils::MakeMaker">ExtUtils::MakeMaker</a> will know how to build, test, and
+install the code. However, since I&rsquo;m using Alien::Base, I need to pass the
+compiler and linker flags to ExtUtils::MakeMaker as well. To do that, I grabbed
+the <a href="http://p3rl.org/Dist::Zilla::Plugin::MakeMaker::Awesome">Dist::Zilla::Plugin::MakeMaker::Awesome</a>
+plugin. Setting that up in your <code>dist.ini</code> is relatively straightforward:</p>
+
+<figure class='code'><figcaption><span> (dist.ini)</span> <a href='/hacktivity/downloads/code/2013-12-24/dist.ini'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="c1">; authordep Dist::Zilla::Plugin::MakeMaker::Awesome</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[Prereqs / Develop ]</span>
+</span><span class='line'><span class="na">-phase</span> <span class="o">=</span> <span class="s">develop</span>
+</span><span class='line'><span class="na">Dist::Zilla::Plugin::MakeMaker::Awesome</span> <span class="o">=</span> <span class="s">0</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[@Filter]</span>
+</span><span class='line'><span class="na">-bundle</span> <span class="o">=</span> <span class="s">@Basic</span>
+</span><span class='line'><span class="na">-remove</span> <span class="o">=</span> <span class="s">MakeMaker</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[=inc::MyLibMakeMaker]</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">[Prereqs]</span>
+</span><span class='line'><span class="na">Alien::MyLib</span> <span class="o">=</span> <span class="s">0</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The line</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[=inc::MyLibMakeMaker]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>specifies that the code that will be used to generate the <code>Makefile.PL</code> will be
+in a module called <code>inc/MyLibMakeMaker.pm</code>. Now in that file, I&rsquo;ll need
+compilation flags by calling the <code>cflags</code> and <code>libs</code> methods on my Alien::Base
+subclass (Alien::MyLib). But this needs to happen when <code>Makefile.PL</code> is run by
+the user, not when Dist::Zilla writes out the file. The following code does that
+by appending our own options to the string we write out to in <code>Makefile.PL</code>.</p>
+
+<figure class='code'><figcaption><span> (MyLibMakeMaker.pm)</span> <a href='/hacktivity/downloads/code/2013-12-24/MyLibMakeMaker.pm'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="nb">package</span> <span class="nn">inc::</span><span class="n">MyLibMakeMaker</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="n">Moose</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">extends</span> <span class="s">&#39;Dist::Zilla::Plugin::MakeMaker::Awesome&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">override</span> <span class="n">_build_WriteMakefile_dump</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+</span><span class='line'>  <span class="k">my</span> <span class="nv">$str</span> <span class="o">=</span> <span class="n">super</span><span class="p">();</span>
+</span><span class='line'>  <span class="nv">$str</span> <span class="o">.=</span> <span class="s">&lt;&lt;&#39;END&#39;;</span>
+</span><span class='line'><span class="s">$WriteMakefileArgs{CONFIGURE} = sub {</span>
+</span><span class='line'><span class="s">  require Alien::MyLib;</span>
+</span><span class='line'><span class="s">  my $alien_mylib = Alien::MyLib-&gt;new;</span>
+</span><span class='line'><span class="s">  +{ CCFLAGS =&gt; $alien_mylib-&gt;cflags, LIBS =&gt; $alien_mylib-&gt;libs };</span>
+</span><span class='line'><span class="s">};</span>
+</span><span class='line'><span class="s">END</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">__PACKAGE__</span><span class="o">-&gt;</span><span class="n">meta</span><span class="o">-&gt;</span><span class="n">make_immutable</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We use the <code>CONFIGURE</code> option to set <code>CCFLAGS</code> and <code>LIBS</code> instead of setting
+<code>CCFLAGS</code> and <code>LIBS</code> directly because these need to be set after the
+<code>Alien::MyLib</code> prerequisite has been met.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -441,6 +576,10 @@ done for now.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/hacktivity/blog/2013/12/24/using-alien-base-dist-zilla-and-eu-mm/">Using Alien::Base, Dist::Zilla, and EU::MM</a>
+      </li>
     
       <li class="post">
         <a href="/hacktivity/blog/2013/12/23/unicode-encodings-and-endianness-writing-libuninum-bindings/">Unicode Encodings and Endianness — Writing Libuninum Bindings</a>
