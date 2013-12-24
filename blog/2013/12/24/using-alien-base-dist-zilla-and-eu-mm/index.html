@@ -144,8 +144,8 @@ plugin. Setting that up in your <code>dist.ini</code> is relatively straightforw
 
 
 <p>specifies that the code that will be used to generate the <code>Makefile.PL</code> will be
-in a module called <code>inc/MyLibMakeMaker.pm</code>. Now in that file, I&rsquo;ll need
-compilation flags by calling the <code>cflags</code> and <code>libs</code> methods on my Alien::Base
+in a module called <code>inc/MyLibMakeMaker.pm</code>. Now, in that file, I&rsquo;ll need to specify
+the compilation flags by calling the <code>cflags</code> and <code>libs</code> methods on my Alien::Base
 subclass (Alien::MyLib). But this needs to happen when <code>Makefile.PL</code> is run by
 the user, not when Dist::Zilla writes out the file. The following code does that
 by appending our own options to the string we write out to in <code>Makefile.PL</code>.</p>
