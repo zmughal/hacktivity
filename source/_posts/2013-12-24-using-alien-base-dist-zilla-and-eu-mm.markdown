@@ -31,7 +31,7 @@ subclass (Alien::MyLib). But this needs to happen when `Makefile.PL` is run by
 the user, not when Dist::Zilla writes out the file. The following code does that
 by appending our own options to the string we write out to in `Makefile.PL`.
 
-{% include_code 2013-12-24/MyLibMakeMaker.pm %}
+{% include_code lang:perl 2013-12-24/MyLibMakeMaker.pm %}
 
 We use the `CONFIGURE` option to set `CCFLAGS` and `LIBS` instead of setting
 `CCFLAGS` and `LIBS` directly because these need to be set after the
