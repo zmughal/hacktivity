@@ -25,8 +25,8 @@ The line
 [=inc::MyLibMakeMaker]
 ```
 specifies that the code that will be used to generate the `Makefile.PL` will be
-in a module called `inc/MyLibMakeMaker.pm`. Now in that file, I'll need
-compilation flags by calling the `cflags` and `libs` methods on my Alien::Base
+in a module called `inc/MyLibMakeMaker.pm`. Now, in that file, I'll need to specify
+the compilation flags by calling the `cflags` and `libs` methods on my Alien::Base
 subclass (Alien::MyLib). But this needs to happen when `Makefile.PL` is run by
 the user, not when Dist::Zilla writes out the file. The following code does that
 by appending our own options to the string we write out to in `Makefile.PL`.
