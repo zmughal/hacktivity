@@ -120,5 +120,5 @@ big-endian version of UTF-32. I just had to ask Perl the byte order it
 detected at compile time and use that ([code](https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122)).
 
 Once I did that, my code was working and all my tests passed! There are still a
-couple of things I need to do in my code to clean it up, but the code is mostly
+couple of things I need to do in order to clean it up, but it's mostly
 done for now.
