@@ -414,7 +414,7 @@ converted the UTF-8 string to UTF-32 in Perl before sending it to C, but I
 never specified the endianness, so Perl used big-endian as the <a href="http://perldoc.perl.org/Encode/Unicode.html#by-endianness">default endianness</a>.
 Well, since the C code was using the native endianness of the machine, I needed to
 find the machine&rsquo;s endianness and encode either a little-endian or
-big-endian version of UTF-32. All I had to was ask Perl the byte order it
+big-endian version of UTF-32. I just had to ask Perl the byte order it
 detected at compile time and use that (<a href="https://github.com/zmughal/p5-Unicode-Number/blob/89cfb5471235dc2d23d9a490417d9b7e558266cf/lib/Unicode/Number.pm#L122">code</a>).</p>
 
 <p>Once I did that, my code was working and all my tests passed! There are still a
